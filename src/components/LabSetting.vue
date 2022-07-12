@@ -49,9 +49,7 @@ export default {
       // 环境光
       const light = new THREE.AmbientLight( 0x303030, 0.2 ); // soft white light
       scene.add( light );
-      this.render = () => {
-				this.renderer.render( scene, camera );
-			}
+      
       // 地面
       let material = new THREE.MeshPhongMaterial( { color: 0x808080, dithering: true } );
       let geometry = new THREE.PlaneGeometry( 2000, 2000 );
@@ -61,7 +59,7 @@ export default {
       mesh.receiveShadow = true;
       scene.add( mesh );
 
-      const group = this.groupBackground(this.render)
+      const group = this.groupBackground()
       scene.add(group)
 
       // 灯光
@@ -77,7 +75,14 @@ export default {
         x: -backgroundW / 2
       })
       scene.add( this.spotLightR );
-      
+
+      // const { lightHelper } = this.helpers(scene, {light: this.spotLightL})
+      // const { lightHelper: lightHelper2 } = this.helpers(scene, {light: this.spotLightR})
+      this.render = () => {
+        // lightHelper?.update();
+        // lightHelper2?.update();
+				this.renderer.render( scene, camera );
+			}
       const controls = new OrbitControls( camera, this.renderer.domElement );
       controls.addEventListener( 'change', this.render );
       controls.minDistance = 20;
@@ -98,14 +103,14 @@ export default {
       this.renderer.outputEncoding = THREE.sRGBEncoding
     },
     // 图卡group
-    groupBackground(render) {
+    groupBackground() {
       const [imgW, imgH] = [80, 60] // 图片显示的尺寸
       const texture = new THREE.TextureLoader().load("/DxoCf.jpg", () => {
-        render()
+        this.render()
       });
       const group = new THREE.Group()
       const backgroundBox = new THREE.BoxGeometry(backgroundW, backgroundH, 1)
-      const backgroundMaterial = new THREE.MeshBasicMaterial({ color: 0x666666})
+      const backgroundMaterial = new THREE.MeshBasicMaterial({ color: '#666666'})
       const backgroundMesh = new THREE.Mesh(backgroundBox, backgroundMaterial)
       backgroundMesh.position.set(0, 0, 0)
       backgroundMesh.castShadow = true;
@@ -125,25 +130,25 @@ export default {
       const {
         x = backgroundW / 2,
         y = backgroundH / 4, 
-        z = 80, // 灯光距离
+        z = 120, // 灯光距离
         target,
       } = option || {}
       const [type, lux] = this.activeLight.split('_')
       const spotLight = new THREE.SpotLight(CT[type]);
       spotLight.position.set(x, y, z);
-      spotLight.angle = Math.PI / 6; // 从聚光灯的位置以弧度表示聚光灯的最大范围
+      spotLight.angle = Math.PI / 7; // 从聚光灯的位置以弧度表示聚光灯的最大范围
       spotLight.penumbra = 0.1; // 聚光锥的半影衰减百分比
       spotLight.decay = 1; // 沿着光照距离的衰减量。
       spotLight.distance = 200; // 距离
       // 光功率power = intensity * 4π （一样会影响光强度）
       // spotLight.intensity = 1 // 光照强度
       spotLight.power = parseInt(lux) / 150
-      spotLight.castShadow = true;
-      spotLight.shadow.mapSize.width = 512;
-      spotLight.shadow.mapSize.height = 512;
-      spotLight.shadow.camera.near = 10;
-      spotLight.shadow.camera.far = 200;
-      spotLight.shadow.focus = 1;
+      // spotLight.castShadow = true;
+      // spotLight.shadow.mapSize.width = 512;
+      // spotLight.shadow.mapSize.height = 512;
+      // spotLight.shadow.camera.near = 10;
+      // spotLight.shadow.camera.far = 200;
+      // spotLight.shadow.focus = 1;
       spotLight.target = target
       return spotLight
     },
