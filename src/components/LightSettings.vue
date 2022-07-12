@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <span>灯光设置</span>
-    <canvas ref="canvas"></canvas>
-  </div>
+  <canvas ref="canvas"></canvas>
 </template>
 
 <script>
@@ -121,11 +118,4 @@ export default {
 </script>
 
 <style scoped>
-div {
-  position: relative;
-}
-span {
-  position: absolute;
-  top: 0;
-}
 </style>
