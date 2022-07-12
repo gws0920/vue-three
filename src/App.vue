@@ -10,17 +10,20 @@
 <script>
 import LightSettings from '@/components/LightSettings.vue';
 import LabSetting from '@/components/LabSetting.vue';
+import TrackAnimation from '@/components/TrackAnimation.vue';
 export default {
   name: 'App',
   components: {
     LightSettings,
-    LabSetting
+    LabSetting,
+    TrackAnimation
   },
   data() {
     return {
       menus: [
         { label: '灯光', value: 'LightSettings' },
         { label: '实验室', value: 'LabSetting' },
+        { label: '轨迹动画', value: 'TrackAnimation' },
       ],
       active: 'LabSetting'
     }
