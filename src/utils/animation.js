@@ -8,7 +8,7 @@ import * as THREE from 'three'
  * @returns update 用于更新动画的函数
  */
 export function positionAnimation(box, positions, onFinished) {
-  const DURATION = 3 // 动画持续时间
+  const DURATION = -3 // 动画持续时间
   const animationGroup = new THREE.AnimationObjectGroup()
   animationGroup.add(box)
   const times = Array.from({length: positions.length / 3}, (_, i) => i)
@@ -17,7 +17,7 @@ export function positionAnimation(box, positions, onFinished) {
   const mixer = new THREE.AnimationMixer(animationGroup)
   const clipAction = mixer.clipAction(clip)
   clipAction.play()
-  clipAction.setLoop(THREE.LoopOnce)
+  // clipAction.setLoop(THREE.LoopOnce)
   clipAction.clampWhenFinished = true
   const callback = (e) => {
     onFinished && onFinished(e)

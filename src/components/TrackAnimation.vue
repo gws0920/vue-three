@@ -57,7 +57,8 @@ export default {
         0, 0, 0,
         -10, 0, 0,
         -10, 10, 0,
-        -10, 10, -10
+        -10, 10, -10,
+        0, 0, 0
       ]
      const update = positionAnimation(mesh, positions, () => {
         console.log('播放结束了')

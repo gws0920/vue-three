@@ -51,17 +51,6 @@ export default {
       mesh.position.set( 0, 5, 0 );
       mesh.castShadow = true;
       scene.add( mesh );
-
-      // 模拟光线圆锥
-      // geometry = new THREE.ConeGeometry(50, 50, 32)
-      // geometry.rotateX(Math.PI * 0.115)
-      // material = new THREE.MeshBasicMaterial( { color: 'transparent', dithering: true } );
-      // material.alphaMap = 0x000000
-      // mesh = new THREE.Mesh( geometry, material );
-      // mesh.position.set( 0, 16, 6 );
-      // // mesh.castShadow = true;
-      // scene.add( mesh );
-      // console.log(geometry)
   
       const controls = new OrbitControls( camera, renderer.domElement );
       controls.addEventListener( 'change', render );

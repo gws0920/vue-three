@@ -54,7 +54,7 @@ export default {
       let material = new THREE.MeshPhongMaterial( { color: 0x808080, dithering: true } );
       let geometry = new THREE.PlaneGeometry( 2000, 2000 );
       let mesh = new THREE.Mesh( geometry, material );
-      mesh.position.set( 0, - 1, 0 );
+      mesh.position.set( 0, - 10, 0 );
       mesh.rotation.x = - Math.PI * 0.5;
       mesh.receiveShadow = true;
       scene.add( mesh );
@@ -76,10 +76,14 @@ export default {
       })
       scene.add( this.spotLightR );
 
-      // const { lightHelper } = this.helpers(scene, {light: this.spotLightL})
+      // 滑台轨道
+      const track = this.runningTrack()
+      scene.add(track)
+
+      const { lightHelper } = this.helpers(scene, {light: this.spotLightL})
       // const { lightHelper: lightHelper2 } = this.helpers(scene, {light: this.spotLightR})
       this.render = () => {
-        // lightHelper?.update();
+        lightHelper?.update();
         // lightHelper2?.update();
 				this.renderer.render( scene, camera );
 			}
@@ -163,11 +167,49 @@ export default {
       // ]
 
     },
+    // 滑台 轨道
+    runningTrack() {
+      const SIZE = 4
+      const pts = [
+        new THREE.Vector2(-1 * SIZE, -1 * SIZE),
+        new THREE.Vector2(-1 * SIZE, 1 * SIZE),
+        new THREE.Vector2(-0.5 * SIZE, 1 * SIZE),
+        new THREE.Vector2(-0.5 * SIZE, 0),
+        new THREE.Vector2(0.5 * SIZE, 0),
+        new THREE.Vector2(0.5 * SIZE, 1 * SIZE),
+        new THREE.Vector2(1 * SIZE, 1 * SIZE),
+        new THREE.Vector2(1 * SIZE, -1 * SIZE),
+        new THREE.Vector2(-1 * SIZE, -1 * SIZE)
+      ]
+      const extrudeSettings = {
+        steps: 1,
+        bevelEnabled: false,
+        depth: 200, // 轨道长度
+      }
+      const shape = new THREE.Shape(pts)
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings)
+      const material = new THREE.MeshPhysicalMaterial({ 
+        color: 0x333333, 
+        metalness: 0,
+        roughness: 0.5,
+        clearcoat: 1.0,
+        clearcoatRoughness: 1.0,
+        reflectivity: 1.0
+      });
+      const meshL = new THREE.Mesh( geometry, material );
+      meshL.position.set(-backgroundW / 4, 0, 0)
+      const meshR = new THREE.Mesh( geometry, material );
+      meshR.position.set(backgroundW / 4, 0, 0)
+      const group = new THREE.Group()
+      group.add(meshL)
+      group.add(meshR)
+      return group
+    },
     helpers(scene, { light }) {
       // 帮助线条
       const lightHelper = new THREE.SpotLightHelper( light ); // 灯光 helper
-      scene.add( lightHelper );
-      const axesHelper = new THREE.AxesHelper( 50 ); // 坐标轴 helper
+      // scene.add( lightHelper );
+      const axesHelper = new THREE.AxesHelper( 100 ); // 坐标轴 helper
       axesHelper.setColors(0xff0000, 0xffff00, 0x00ffff) // x, y, z
       scene.add( axesHelper );
       // const shadowCameraHelper = new THREE.CameraHelper( light.shadow.camera ); // 相机 helper
