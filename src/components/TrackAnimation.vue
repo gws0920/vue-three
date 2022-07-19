@@ -29,12 +29,6 @@ export default {
       const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 1, 1000)
       camera.position.set(160, 40, 10)
 
-      // 灯光
-      const spotLight = this.renderLight()
-      scene.add( spotLight );
-      // 帮助线条
-      const { lightHelper, shadowCameraHelper } = showHelper ? this.helpers(scene, { light: spotLight }) : {}
-
       // 地面
       let material = new THREE.MeshPhongMaterial( { color: 0x808080, dithering: true } );
       let geometry = new THREE.PlaneGeometry( 2000, 2000 );
@@ -52,6 +46,12 @@ export default {
       mesh.castShadow = true;
       scene.add( mesh );
 
+      // 灯光
+      const spotLight = this.renderLight(mesh)
+      scene.add( spotLight );
+
+      // 帮助线条
+      const { lightHelper, shadowCameraHelper } = showHelper ? this.helpers(scene, { light: spotLight }) : {}
       // 动画相关
       const positions = [
         0, 0, 0,
@@ -85,12 +85,12 @@ export default {
 
       function animate() {
         update();
-        renderer.render( scene, camera );
+        render();
         requestAnimationFrame(animate);
       }
       animate()
     },
-    renderLight() {
+    renderLight(target) {
       const spotLight = new THREE.SpotLight( 0xffffff );
       spotLight.position.set( 0, 40, 15 );
       spotLight.angle = Math.PI / 4;
@@ -104,6 +104,7 @@ export default {
       spotLight.shadow.camera.near = 10;
       spotLight.shadow.camera.far = 200;
       spotLight.shadow.focus = 1;
+      spotLight.target = target
       return spotLight
     },
     helpers(scene, { light }) {
